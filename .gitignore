@@ -281,3 +281,5 @@ crashlytics-build.properties
 fabric.properties
 
 .vscode/
+
+input/
