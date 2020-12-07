@@ -58,9 +58,9 @@ def write_img(output_path, img):
     cv2.imwrite(output_path, img)
 
 
-def main():
-    file_name = 'input002.png'
-    input_path = f'input/{file_name}'
+def run(input_path, output_path):
+    # file_name = 'input002.png'
+    # input_path = f'input/{file_name}'
 
     h, s, v = get_hsv(input_path)
     threshold_v, v_after_threshold = apply_otsu_threshold(v)
@@ -68,9 +68,9 @@ def main():
 
     img_bgr_enhanced = get_bgr_from_hsv(h, s, v_enhanced)
 
-    output_path = f'output/{file_name}'
+    # output_path = f'output/{file_name}'
     write_img(output_path, img_bgr_enhanced)
 
 
 if __name__ == '__main__':
-    main()
+    run()
