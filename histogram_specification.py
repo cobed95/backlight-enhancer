@@ -3,9 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-
-imgname = 'image01.jpeg'
-
 def GenTarget_Hist(input_hist):
 	l_2 = int(len(input_hist)/2)
 	target_hist = input_hist.copy()
@@ -13,7 +10,7 @@ def GenTarget_Hist(input_hist):
 	for i in range(0, l_2):
 		Sum = Sum+input_hist[i]
 	h = 2*Sum/l_2
-	
+
 	for i in range(0, l_2):
 		target_hist[i][0] = h*i/l_2
 	return target_hist
@@ -38,17 +35,14 @@ def calAlpha(G, I_mean):
 	return alpha
 
 
-def main():
-	img = cv2.imread('input/'+imgname)
-	print(img.shape)	
-	
+def enhance(img):	
 	print('Calculate intensity')	
 	# Calculate intensity of img
 	I = intensity(img)
 
 	print('Calculate alpha')	
 	# Calculate alpha
-	G = cv2.GaussianBlur(I, (5,5), 0)
+	G = cv2.GaussianBlur(I, (11,11), 0)
 	I_mean = np.mean(I)
 	alpha = calAlpha(G, I_mean)
 	
@@ -91,7 +85,6 @@ def main():
 			if (val < min_val):
 				min_val = val
 				min_j = j
-
 		lookup[i] = min_j
 
 	print('Intensity calcuation')
@@ -112,37 +105,13 @@ def main():
 	ratio = I_/I
 
 	print('Color image convertion')
+	t = ratio*img
+	M = np.max(t)
+	r = 255/M
 	for i in range(img.shape[0]):
 		for j in range(img.shape[1]):
-			t = ratio[i][j][0]*img[i][j]
-			r = 255/t[np.argmax(t)] if np.max(t)>255 else 1	
-			for k in range(len(t)):
-				t[k] = int(t[k]*r)
-			trans_img[i][j] = t
-	
-	# Write the transformed image to a jpeg file
-	cv2.imwrite('output/'+imgname, trans_img)
+			for k in range(img.shape[2]):
+				trans_img[i][j][k] = int(t[i][j][k]*r)
 
-'''
-	plt.subplot(2, 3, 1)
-	plt.title('Original hist')
-	plt.plot(input_hist)
+	return trans_img	
 
-	plt.subplot(2, 3, 2)
-	plt.title('Comulated Original hist')
-	plt.plot(cum_input_hist)
-
-
-	plt.subplot(2, 3, 3)
-	plt.title('Target pdf')
-	plt.plot(target_hist)
-		
-	plt.subplot(2, 3, 4)
-	plt.title('Comulated Target pdf')
-	plt.plot(cum_target_hist)
-	
-	plt.show()
-'''
-	
-if __name__ == '__main__':
-	main()
