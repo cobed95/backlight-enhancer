@@ -1,7 +1,9 @@
 import os
+import cv2
 from argparse import ArgumentParser
 
-from log_transformation import run as run_log_transformation
+from backlight_enhancer_io import read_image, write_image, DEFAULT_INPUT_PATH, DEFAULT_OUTPUT_DIR
+from log_transformation import enhance as enhance_with_log_transformation
 # from histogram_equalization import run as run_histogram_equalization
 # from pyramid_fusion import run as run_pyramid_fusion
 
@@ -11,7 +13,6 @@ PYRAMID_FUSION = 'pyramid-fusion'
 
 
 def get_parser():
-    pwd = os.path.dirname(os.path.realpath(__file__))
 
     def add_arguments(target_parser):
         target_parser.add_argument('--method',
@@ -23,11 +24,11 @@ def get_parser():
         target_parser.add_argument('--input-path',
                                    required=False,
                                    help='path to the input image',
-                                   default=f'{pwd}/input/input001.jpeg')
+                                   default=DEFAULT_INPUT_PATH)
         target_parser.add_argument('--output-dir',
                                    required=False,
                                    help='path to the directory in which the output image will be saved',
-                                   default=f'{pwd}/output')
+                                   default=DEFAULT_OUTPUT_DIR)
 
     arg_parser = ArgumentParser(description='Enhance a backlit image')
     add_arguments(arg_parser)
@@ -41,16 +42,18 @@ def run():
     print(args.method, args.input_path, args.output_dir)
     print(os.path.basename(args.input_path))
     output_path = os.path.join(args.output_dir, os.path.basename(args.input_path))
+
+    img_to_enhance = read_image(args.input_path)
     if args.method == LOG_TRANSFORMATION:
-        run_log_transformation(input_path=args.input_path, output_path=output_path)
+        enhanced_img = enhance_with_log_transformation(img_to_enhance)
     elif args.method == HISTOGRAM_EQUALIZATION:
-        # run_histogram_equalization(input_path=args.input_path, output_path=output_path)
-        pass
-    elif args.method == PYRAMID_FUSION:
-        # run_pyramid_fusion(input_path=args.input_path, output_path=output_path)
+        # enhanced_img = run_histogram_equalization(input_path=args.input_path, output_path=output_path)
         pass
     else:
-        arg_parser.error(f'Invalid value for argument \'method\': {args.method}')
+        # enhanced_img = run_pyramid_fusion(input_path=args.input_path, output_path=output_path)
+        pass
+
+    write_image(output_path, enhanced_img)
 
 
 if __name__ == '__main__':
