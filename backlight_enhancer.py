@@ -1,14 +1,13 @@
 import os
-import cv2
 from argparse import ArgumentParser
 
 from backlight_enhancer_io import read_image, write_image, DEFAULT_INPUT_PATH, DEFAULT_OUTPUT_DIR
 from log_transformation import enhance as enhance_with_log_transformation
-# from histogram_equalization import run as run_histogram_equalization
+from histogram_specification import enhance as enhance_with_histogram_specification
 from pyramid_fusion import enhance as enhance_with_pyramid_fusion
 
 LOG_TRANSFORMATION = 'log-transformation'
-HISTOGRAM_EQUALIZATION = 'histogram-equalization'
+HISTOGRAM_SPECIFICATION = 'histogram-specification'
 PYRAMID_FUSION = 'pyramid-fusion'
 
 
@@ -19,7 +18,7 @@ def get_parser():
                                    required=True,
                                    help='enhancement method to use',
                                    choices=[LOG_TRANSFORMATION,
-                                            HISTOGRAM_EQUALIZATION,
+                                            HISTOGRAM_SPECIFICATION,
                                             PYRAMID_FUSION])
         target_parser.add_argument('--input-path',
                                    required=False,
@@ -44,9 +43,8 @@ def run():
     img_to_enhance = read_image(args.input_path)
     if args.method == LOG_TRANSFORMATION:
         enhanced_img = enhance_with_log_transformation(img_to_enhance)
-    elif args.method == HISTOGRAM_EQUALIZATION:
-        # enhanced_img = run_histogram_equalization(input_path=args.input_path, output_path=output_path)
-        pass
+    elif args.method == HISTOGRAM_SPECIFICATION:
+        enhanced_img = enhance_with_histogram_specification(img_to_enhance)
     else:
         enhanced_img = enhance_with_pyramid_fusion(img_to_enhance)
 
