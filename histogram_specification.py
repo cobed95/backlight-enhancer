@@ -1,7 +1,5 @@
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
-
 
 def GenTarget_Hist(input_hist):
 	l_2 = int(len(input_hist)/2)
@@ -61,7 +59,6 @@ def enhance(img):
 		cum+=input_hist[i][0]
 		cum_input_hist.append(cum)
 
-
 	print('Generate target Histogram and lookup table')
 	#Generate target_histograms
 	target_hist = GenTarget_Hist(input_hist)
@@ -112,6 +109,5 @@ def enhance(img):
 		for j in range(img.shape[1]):
 			for k in range(img.shape[2]):
 				trans_img[i][j][k] = int(t[i][j][k]*r)
-
 	return trans_img	
 
