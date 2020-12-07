@@ -58,8 +58,8 @@ def enhance(img):
 def run():
     input_path, output_path = DEFAULT_INPUT_PATH, DEFAULT_OUTPUT_PATH
     img = read_image(input_path)
-    enhance(img)
-    write_image(output_path)
+    enhanced_img = enhance(img)
+    write_image(output_path, enhanced_img)
 
 
 if __name__ == '__main__':
