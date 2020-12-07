@@ -5,7 +5,7 @@ from argparse import ArgumentParser
 from backlight_enhancer_io import read_image, write_image, DEFAULT_INPUT_PATH, DEFAULT_OUTPUT_DIR
 from log_transformation import enhance as enhance_with_log_transformation
 # from histogram_equalization import run as run_histogram_equalization
-# from pyramid_fusion import run as run_pyramid_fusion
+from pyramid_fusion import enhance as enhance_with_pyramid_fusion
 
 LOG_TRANSFORMATION = 'log-transformation'
 HISTOGRAM_EQUALIZATION = 'histogram-equalization'
@@ -39,8 +39,6 @@ def get_parser():
 def run():
     arg_parser = get_parser()
     args = arg_parser.parse_args()
-    print(args.method, args.input_path, args.output_dir)
-    print(os.path.basename(args.input_path))
     output_path = os.path.join(args.output_dir, os.path.basename(args.input_path))
 
     img_to_enhance = read_image(args.input_path)
@@ -50,8 +48,7 @@ def run():
         # enhanced_img = run_histogram_equalization(input_path=args.input_path, output_path=output_path)
         pass
     else:
-        # enhanced_img = run_pyramid_fusion(input_path=args.input_path, output_path=output_path)
-        pass
+        enhanced_img = enhance_with_pyramid_fusion(img_to_enhance)
 
     write_image(output_path, enhanced_img)
 
